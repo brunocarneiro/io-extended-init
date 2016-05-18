@@ -5,7 +5,7 @@
   this.token = '';
   this.messages = [];
   this.currentUser = 'Marcos Moura';
-  this.currentBoard = 'General';
+  this.currentBoard = 'Geral';
   this.currentBoardIcon = 'message';
 
   this.boards = [
@@ -37,8 +37,8 @@
     }, 100);
   };
 
-  this.changeBoard = function(channel, icon) {
-    this.currentBoard = channel;
+  this.changeBoard = function(board, icon) {
+    this.currentBoard = board;
     this.currentBoardIcon = icon;
 
     this.scrollPanel();
