@@ -1,0 +1,75 @@
+<body layout="column" ng-controller="MessengerController as messenger" ng-cloak>
+  <md-toolbar class="background-toolbar md-tall" hide-xs></md-toolbar>
+
+  <div class="container" layout="column" flex>
+    <md-content class="main-content login layout-padding" md-whiteframe="2dp" ng-hide="messenger.currentUser">
+      <form novalidate layout="column" ng-submit="messenger.currentUser = user">
+        <md-input-container>
+          <label>Digite o seu Twitter ou o seu nome</label>
+          <input type="text" ng-model="user" maxlength="50">
+
+          <p class="hint">CI&amp;T e Google não são responsáveis pelas mensagens postadas.</p>
+        </md-input-container>
+
+        <md-button type="submit" class="md-primary md-raised">Login</md-button>
+      </form>
+    </md-content>
+
+    <md-content class="main-content flex" md-whiteframe="2dp" layout ng-show="messenger.currentUser">
+      <div class="main-sidebar" flex="30" flex-xs="none">
+        <md-toolbar class="inner-content-header" md-theme="toolbars" hide-xs>
+          <div class="md-toolbar-tools">
+            <span class="md-title" flex>Boards</span>
+          </div>
+        </md-toolbar>
+
+        <md-list>
+          <md-list-item md-ink-ripple ng-repeat="channel in messenger.channels" ng-class="{ 'md-active': messenger.currentChannel === channel.name }" ng-click="messenger.changeChannel(channel.name, channel.icon)">
+            <md-icon class="md-avatar-icon">{{ channel.icon }}</md-icon>
+            <p hide-xs>{{ channel.name }}</p>
+          </md-list-item>
+        </md-list>
+      </div>
+
+      <div flex layout="column">
+        <md-toolbar class="inner-content-header" md-theme="toolbars">
+          <div class="md-toolbar-tools">
+            <md-list>
+              <md-list-item>
+                <md-icon class="md-avatar-icon">{{ messenger.currentChannelIcon }}</md-icon>
+                <p>{{ messenger.currentChannel }}</p>
+              </md-list-item>
+            </md-list>
+          </div>
+        </md-toolbar>
+
+        <div class="inner-feed" flex layout="column" layout-align="end start">
+          <div class="scrollable">
+            <div
+              class="message"
+              ng-class="{ 'self-start': message.from !== messenger.currentUser, 'self-end': message.from === messenger.currentUser }"
+              ng-repeat="message in messenger.messages | filter: { channel: messenger.currentChannel } track by message.timestamp">
+              <img src="https://twitter.com/{{ message.from }}/profile_image" alt="{{ message.from }}" ng-error="messenger.onImageError($event)" ng-show="message.from !== messenger.currentUser">
+              <div class="message-content">
+                <span class="message-user" ng-show="message.from !== messenger.currentUser">{{ message.from }}</span>
+                <div class="message-text">{{ message.body }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <md-toolbar class="inner-content-footer" md-theme="toolbars">
+          <form novalidate class="md-toolbar-tools" ng-submit="messenger.sendMessage(messenger.input)">
+            <md-input-container md-no-float flex>
+              <input type="text" placeholder="Type a message" ng-model="messenger.input" md-maxlength="140" maxlength="140">
+            </md-input-container>
+
+            <md-button type="submit" class="md-accent md-hue-2 md-icon-button">
+              <md-icon>send</md-icon>
+            </md-button>
+          </form>
+        </md-toolbar>
+      </div>
+    </md-content>
+  </div>
+</body>
