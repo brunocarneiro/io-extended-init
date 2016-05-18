@@ -24,9 +24,9 @@
         </md-toolbar>
 
         <md-list>
-          <md-list-item md-ink-ripple ng-repeat="channel in messenger.channels" ng-class="{ 'md-active': messenger.currentChannel === channel.name }" ng-click="messenger.changeChannel(channel.name, channel.icon)">
-            <md-icon class="md-avatar-icon">{{ channel.icon }}</md-icon>
-            <p hide-xs>{{ channel.name }}</p>
+          <md-list-item md-ink-ripple ng-repeat="board in messenger.boards" ng-class="{ 'md-active': messenger.currentBoard === board.name }" ng-click="messenger.changeBoard(board.name, board.icon)">
+            <md-icon class="md-avatar-icon">{{ board.icon }}</md-icon>
+            <p hide-xs>{{ board.name }}</p>
           </md-list-item>
         </md-list>
       </div>
@@ -36,8 +36,8 @@
           <div class="md-toolbar-tools">
             <md-list>
               <md-list-item>
-                <md-icon class="md-avatar-icon">{{ messenger.currentChannelIcon }}</md-icon>
-                <p>{{ messenger.currentChannel }}</p>
+                <md-icon class="md-avatar-icon">{{ messenger.currentBoardIcon }}</md-icon>
+                <p>{{ messenger.currentBoard }}</p>
               </md-list-item>
             </md-list>
           </div>
@@ -48,8 +48,7 @@
             <div
               class="message"
               ng-class="{ 'self-start': message.from !== messenger.currentUser, 'self-end': message.from === messenger.currentUser }"
-              ng-repeat="message in messenger.messages | filter: { channel: messenger.currentChannel } track by message.timestamp">
-              <img src="https://twitter.com/{{ message.from }}/profile_image" alt="{{ message.from }}" ng-error="messenger.onImageError($event)" ng-show="message.from !== messenger.currentUser">
+              ng-repeat="message in messenger.messages | filter: { board: messenger.currentBoard } track by message.timestamp">
               <div class="message-content">
                 <span class="message-user" ng-show="message.from !== messenger.currentUser">{{ message.from }}</span>
                 <div class="message-text">{{ message.body }}</div>

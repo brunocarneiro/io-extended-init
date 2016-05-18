@@ -1,22 +1,22 @@
-.controller('MessengerController', function($window, $http, $timeout) {
+.controller('MessengerController', function($http, $timeout) {
   var self = this;
 
   this.channel = '';
-  this.channelId = '';
+  this.token = '';
   this.messages = [];
-  this.currentUser = '';
-  this.currentChannel = 'General';
-  this.currentChannelIcon = 'message';
+  this.currentUser = 'Marcos Moura';
+  this.currentBoard = 'General';
+  this.currentBoardIcon = 'message';
 
-  this.channels = [
+  this.boards = [
     {
-      name: 'General',
+      name: 'Geral',
       icon: 'message'
     }, {
-      name: 'Party',
+      name: 'Festa',
       icon: 'local_bar'
     }, {
-      name: 'Lunch',
+      name: 'Almoço',
       icon: 'local_pizza'
     }, {
       name: 'Keynote',
@@ -26,10 +26,6 @@
       icon: 'business_center'
     }
   ];
-
-  this.onImageError = function($event) {
-    $event.target.src = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_' + (Math.floor(Math.random() * 6) + 1) + '_normal.png';
-  };
 
   this.scrollPanel = function() {
     $timeout(function() {
@@ -41,9 +37,9 @@
     }, 100);
   };
 
-  this.changeChannel = function(channel, icon) {
-    this.currentChannel = channel;
-    this.currentChannelIcon = icon;
+  this.changeBoard = function(channel, icon) {
+    this.currentBoard = channel;
+    this.currentBoardIcon = icon;
 
     this.scrollPanel();
 
@@ -58,9 +54,9 @@
       url: '/message',
       params: {
         from: this.currentUser,
-        channel: this.currentChannel,
+        board: this.currentBoard,
         body: message,
-        channelId: self.channelId
+        token: self.token
       }
     }).then(self.scrollPanel);
   };
@@ -68,14 +64,12 @@
   $http
     .post('/login')
     .then(function(response) {
-      self.channelId = response.data.channelId;
-      self.channel = new $window.goog.appengine.Channel(self.channelId);
+      self.token = response.data.token;
+      self.channel = new window.goog.appengine.Channel(self.token);
 
       self.channel.open({
         onmessage: function(message) {
-          self.messages.push(JSON.parse(message.data));
-
-          self.scrollPanel();
+          console.log('onopen', arguments);
         },
         onopen: function() {
           console.log('onopen', arguments);
